@@ -1,0 +1,264 @@
+---
+title: "Practicing of Rmarkdown"
+author: "Arnon D. Lieber"
+date: "7/16/2018"
+output: html_document
+---
+
+### R fundamentals 03: Elements of programming, R Markdown  (`r format(Sys.Date(), "%b %d, %y")`)
+[random header level 3]
+---
+
+As the last part of R fundamentals series, we will study elements of R programming and R markdown.
+
+---
+
+In this expression below, we can set the default chunk options for the rest of the document
+Please note that this chunk itself is defined as `include=FALSE`, means, please evaluate it but no output of any type please!
+
+
+```{r setDefault, include=FALSE}
+# This code chunk defines the default chunks setting
+knitr::opts_chunk$set(eval=FALSE, comment="$$$", fig.width=6)
+```
+
+>
+> This is the place where we supposed to get the output of the first chunk
+>
+
+### Conditional statements and operators in R  
+[Header of level 3]
+
+Here, since this is just an example and not a real code, I left it with the default chunk options, e.g. with `eval=FALSE`  
+However, I gave this chunk a name, called it "basicIf"
+
+```{r basicIf}
+  if (condition) {
+    expression
+  }
+```
+
+##
+
+Here, I want to run the code and see the output, therefore `eval=TRUE`
+
+```{r eval=TRUE, comment="Console says:"}
+  # Assign x to -8
+  x <- -8
+  # Print if x is negative
+  if (x < 0) {
+    print("x is a negative number")
+  }
+```
+
+##
+
+Here is an example of how to use HTML tags within an Rmarkdown document:  
+(astricks are used to form an unordered list - the empty line here below is mandatory!)
+
+* `<br>` is a tag that forces a new line (a break)
+* `<span>` allows to define a local text style
+
+<br>
+<span style="color:blue">**Classwork/Homework**</span>: Change x to 5 and re-run the above code. What does that print?
+
+<br>
+
+##
+
+
+Here, again, I'm not interested in the output so I leave it with the default chunk options, e.g. with `eval=FALSE`
+
+
+```{r}
+  if (condition 1) {
+    expression
+  } else if (condition 2) {
+    expression
+  } else {
+    expression
+  }
+```
+
+##
+
+Here I changed the way the output is indicated, prompt it with "Console says:"
+
+```{r eval=TRUE, comment="Console says:"}
+  # Assign x to 6
+  x <- 6
+  # Check if x is divisible by 2 or 3, if so print it is
+  # Otherwise print it is not
+  if (x %% 2 == 0) {
+    print("x is divisioble by 2")
+  } else if(x %% 3 == 0) {
+    print("x is divisible by 3")
+  } else {
+    print("x is neither divisible by 2 nor 3")
+  }
+```
+
+ 
+<br><br>  
+  
+### Output formating:  
+  
+<small>**Example1:** each line generates its own output and ploted in this order, each in a box of its own <br>
+(since our `opts_chunk$set` indicates `eval=FALSE` we need to specify `eval=TRUE`;  echo = TRUE is a default)</small>
+
+```{r eval=TRUE}
+  # Check the quality of logical objects
+  TRUE == FALSE
+  # Compare strings
+  "hi" == "hello"
+  # Check inequlaity
+  2 != 3
+```
+
+##
+
+<small>**Example2:** all commands and their outputs are merged into one compact box</small>
+```{r eval=TRUE, collapse=TRUE}
+  # Check the quality of logical objects
+  TRUE == FALSE
+  # Compare strings
+  "hi" == "hello"
+  # Check inequlaity
+  2 != 3
+```
+
+##
+
+<small>**Example3:** all outputs are gathered, printed at the end of the chunk</small>
+```{r eval=TRUE, results='hold'}
+  # Check the quality of logical objects
+  TRUE == FALSE
+  # Compare strings
+  "hi" == "hello"
+  # Check inequlaity
+  2 != 3
+```
+
+##
+
+
+#### R Markdown
+
+R Markdown is a writing tool that allws us to write pain texts while the formating is kind of taken care by the system. Helps focussing on the content than on formatting - which is extremely important. Several cool features including adding math equations (latex). 
+
+##
+
+R Markdown combines best features of programming elements:
+
+
+![](Rmd.png)
+
+---
+
+Why write in R Markdown?
+
+* Formatting stays where it should
+
+* Fast typing - no mouse required
+
+* Easy to read and edit when marked up
+
+* Allows good logical division of the document
+
+* More than anything **REPRODUCIBLE!!!**
+
+---
+
+##### R markdown options
+
+It is possible to control the behavior of each code chunk by providing a set of keywords.
+Let's go over them in section 5 of the [Rmarkdown cheatsheet](rmarkdown-cheatsheet.pdf):
+
+<center> ![](RmdCheatsheet-sec5.PNG) </center>
+
+---
+
+Here is a two levels unordered list:
+
+* results: ('markup'; character) takes these possible values
+
+    + markup: mark up the results using the output hook, e.g. put results in a special LaTeX environment
+    + asis: output as-is, i.e., write raw results from R into the output document
+    + hold: hold all the output pieces and push them to the end of a chunk
+    + hide: hide results; this option only applies to normal R output (not warnings, messages or errors)
+    
+* comment: Comment character to preface results with (related to eval=TRUE of course)
+
+---
+
+It is possible to define a global (default) behavior for the code chunks (preferably at the begining) by the following format:  
+[empty line below is not optional!]
+
+> knitr::opts_chunk$set()
+
+Example: 
+`knitr::opts_chunk$set(comment=NA, fig.width=6)`
+
+See 
+
+> \> ?opts_knit
+
+for the alternative approach to setting package options
+
+---
+
+**Note**: Never ever change directories in R Markdown documents - just don't do it. 
+
+You need to put all images inside the folder you are working on to include in the R Markdown document. 
+
+---
+
+It also renders the final report in different formats:
+
+
+![](Rmd_formats.png)
+
+##
+
+Here, I want to load the HANES dataset, but don't want to show all the process of loading the data...  
+
+```{r eval=TRUE, echo=FALSE, message=FALSE}
+  # Install RCurl package and load the package
+  
+  pkgTest <- function(x)
+  {
+    if (!require(x,character.only = TRUE))
+    {
+      install.packages(x,dep=TRUE)
+        if(!require(x,character.only = TRUE)) stop("Package not found")
+    }
+  }
+
+  pkgTest("RCurl")
+  library(RCurl)
+  # Import the HANES data set from GitHub; break the string into two for readability
+  # (Please note this readability aspect very carefully)
+  URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+  URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+  # Paste it to constitute a single URL 
+  URL <- paste(URL_text_1, URL_text_2, sep="")
+  HANES <- read.csv(text=getURL(URL))
+```
+
+##
+
+```{r eval=TRUE, fig.width = 7, fig.height = 5, fig.align = 'center'}
+  # Plot LDL values vs HDL values
+  plot(HANES$LDL, HANES$HDL)
+```
+
+##
+
+---
+
+#### Selected materials and references
+
+1. [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)
+2. [knitr package options](https://yihui.name/knitr/options/) and more
+
+---
