@@ -1,0 +1,691 @@
+---
+title: "HW1"
+author: "Moosun Brad Kim"
+date: "7/16/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+### R fundamentals 03: Elements of programming, R Markdown  (`r format(Sys.Date(), "%b %d, %y")`)
+HW1
+---
+
+As the last part of R fundamentals series, we will study elements of R programming and R markdown.
+
+---
+
+In this expression below, we can set the default chunk options for the rest of the document
+Please note that this chunk itself is defined as `include=FALSE`, means, please evaluate it but no output of any type please!
+
+library(dplyr)
+library(knitr)
+
+```{r setDefault, include=FALSE}
+# This code chunk defines the default chunks setting
+knitr::opts_chunk$set(eval=FALSE, comment="$$$", fig.width=6)
+```
+
+
+> This is the place where we supposed to get the output of the first chunk
+>
+
+### Conditional statements and operators in R  
+HW1
+
+<span style="color:blue">**Classwork/Homework**</span>: Assign the string hello world to object 
+
+```{r eval=TRUE, comment="Console says:"}
+  # Assign string Hello World to x
+x <- "Hello World"
+  # Print x
+print(x)
+```
+
+##
+
+<span style="color:blue">**Classwork/Homework**</span>: Consider the seq function help page. Describe the derivations of this function. 
+
+```{r eval=TRUE, comment="Console says:"}
+  # A sequence from 1 to 10
+seq(from=1, to=10)
+  # or
+seq(1:10)
+  # Generates a sequence of length.out equally spaced values from from to to
+seq(0, 10, length.out = 11)
+```
+
+<span style="color:blue">**Classwork/Homework**</span>: Consider the rep function help page. Describe the function and its derivations
+
+```{r eval=TRUE, comment="Console says:"}
+  # Repeat seq from 1 to 4 twice
+rep(1:4, 2)
+  # Repeat seq from 1 to 4 3 times, but with 2 numbers each next to each other.
+rep(1:4, each = 2, times = 3)
+  # Until a length of 10
+rep(1:4, each = 2, len = 10)
+```
+ 
+<br>
+
+<span style="color:blue">**Classwork/Homework**</span>: Classwork/Homework:
+
+1. What happens if you type names(n) <- v?
+2. What if the length of either vectors (names or values) are not the same?
+3. What happens if you label two numbers with the same name?
+
+```{r eval=TRUE, comment="Console says:"}
+# What happens if you type names(n) <- v?
+#Indexes names vector v to a vector n. Switches around
+v <- c(2, 15, 5, 7)
+n <- c("two", "fifteen", "five", "seven")
+names(n)<-v
+v
+n
+# What if the length of either vectors (names or values) are not the same?
+#fills v with a <NA>
+v <- c(2, 15, 5, 7,10)
+names(v)<-n
+v
+# What happens if you label two numbers with the same name?
+#still works
+v <- c(2, 15, 5, 7,10)
+n <- c(2, 15, 5, 7,10)
+v
+```
+##
+
+<br>
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+1. What happens if you type names(n) <- v?
+2. What if the length of either vectors (names or values) are not the same?
+3. What happens if you label two numbers with the same name?
+```{r eval=TRUE, comment="Console says:"}
+# What happens if you type names(n) <- v?
+#Indexes names vector v to a vector n. Switches around
+v <- c(2, 15, 5, 7)
+n <- c("two", "fifteen", "five", "seven")
+names(n)<-v
+v
+n
+# What if the length of either vectors (names or values) are not the same?
+#fills v with a <NA>
+v <- c(2, 15, 5, 7,10)
+names(v)<-n
+v
+# What happens if you label two numbers with the same name?
+#still works
+v <- c(2, 15, 5, 7,10)
+n <- c(2, 15, 5, 7,10)
+v
+```
+
+##
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+1.What happens if you swap the index?
+
+2. What happens if you subset by the name not present, like  v[c("two","three")]?
+
+3. Does the “subseting some”" operation work with names?
+
+4. What happens if the logical vector has less elements than the orginal vector v (remember recyling)? 
+
+5. Find a way to access the last element of a vector.
+
+```{r eval=TRUE, comment="Console says:"}
+#1.What happens if you swap the index?
+# subsetting by index will return the sequential index
+v <- c(2, 15, 5, 7,10)
+n <- c("fifteen","two", "five", "seven","ten")
+names(v)<-n
+v
+v[c(1,2)]
+
+#2. What happens if you subset by the name not present, like  v[c("two","three")]?
+# creates a vector with <NA> for non-present element
+v[c("two","three")]
+```
+##
+```{r eval=FALSE, , results='hold', comment="Console says:"}
+#3. Does the “subseting some”" operation work with names?
+#No
+v[-c("fifteen","two","five")]
+```
+```{r eval=TRUE, comment="Console says:"}
+#4. What happens if the logical vector has less elements than the orginal vector v (remember recyling)? 
+#Returns TRUE vectors sequentially from start
+ n <- c("two", "fifteen", "five", "seven")
+ v <- c(2, 15, 5, 7)
+v[c(FALSE, TRUE,TRUE)]
+#5. Find a way to access the last element of a vector.
+tail(v, n=1)
+```
+##
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+1.Make a vector of length 5 with NA in them and test for missing values using the is.na() function.
+
+2. Extend this to a vector of length 5000. 
+
+```{r eval=TRUE, comment="Console says:"}
+#1.Make a vector of length 5 with NA in them and test for missing values using the is.na() function.
+x <- c(NA,NA,NA,NA,NA)
+is.na(x)
+
+#2. Extend this to a vector of length 5000.
+length(x) <-5000
+length(x)
+
+```
+
+
+
+```{r eval=TRUE, comment="Console says:"}
+#√Play with the sep argument to include other type of delimiters (like comma etc.) 
+
+
+paste(c("this","what", "I"), "is a meme", sep=" ")
+paste(c("this","what", "I"), "a meme", sep=" is ")
+paste(c("this","what", "I"), "a meme", sep=",")
+
+```
+<span style="color:blue">**Classwork/Homework**</span>: 
+1. What happens if the number of rows/coumns are more than the generated numbers when using the function matrix()?
+2.What happens in cbind() (and rbind()) if one of the columns (and rows) have more numbers than the other?
+3.Combine two matrices using cbind().
+4.Can you “bind” two matrices of different data types? What happens when you do that?
+
+```{r eval=TRUE, comment="Console says:"}
+# What happens if the number of rows/coumns are more than the generated numbers when using the function matrix()?
+# Fills empty rows with another sequence
+matrix(1:6, nrow=10)
+# What happens in cbind() (and rbind()) if one of the columns (and rows) have more numbers than the other?
+#extra column in cbind with less numbers will repeat sequence. Nice nersa for rbind.
+cbind(1:3, 1:5)
+rbind(1:3, 1:5)
+# Combine two matrices using cbind().
+cbind(2:10, 1:5)
+```
+```{r eval=FALSE, comment="Console says:"}
+#Can you “bind” two matrices of different data types? What happens when you do that?
+#YES
+cbind(1:5, c("one","two","three","four","five"))
+```
+
+##
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+1.What will M[5] print? Specify the rationale behind this.
+2. What does this subset print, M[c(2,3),c(1,2)]? 
+
+```{r eval=TRUE, comment="Console says:"}
+#1.What will M[5] print? Specify the rationale behind this.
+#Returns 5th sequential element of matrix
+(M <- matrix(1:9, nrow=3))
+M[5]
+#2. What does this subset print, M[c(2,3),c(1,2)]? 
+M[c(2,3),c(1,2)]
+M[c(1,3),c(2,3)]
+M[2, c(2,3)]
+```
+##
+
+<span style="color:blue">**Classwork/Homework**</span>:
+What happens if you subtract/add/multiply two matrices of different size? 
+```{r eval=FALSE, comment="Console says:"}
+# What happens if you subtract/add/multiply two matrices of different size? 
+#noncomformable arrays
+A <- matrix(1:9, nrow=3)
+B <- matrix(1:12, nrow=3)
+A
+B
+A+B
+```
+
+##Lec 3 R fundamentals 02: Advanced data types and graphics 
+<br>
+<span style="color:blue">**Classwork/Homework**</span>:
+Rename the blood_type_factor in the above example as follows
+<br>
+##
+
+```{r eval=TRUE, comment="Console says:"}
+blood_type <- c("A", "B", "AB", "O")
+
+as.integer(blood_type_factor)
+str(blood_type_factor)
+blood_type_factor2<-factor(blood_type, levels=c("A", "B", "AB", "O"), 
+                            labels=c("BT_A", "BT_B", "BT_AB", "BT_O"))
+str(blood_type_factor)
+blood_type_factor
+str(blood_type_factor2)
+blood_type_factor2
+```
+<br>
+
+<span style="color:blue">**Classwork/Homework**</span>:
+Use the inequality operator (< or >) on a nominal category and print the output. : 
+<br>
+```{r eval=TRUE, comment="Console says:"}
+#Use the inequality operator (< or >) on a nominal category and print the output.
+
+blood_type <- c("A", "B", "AB", "O")
+
+as.integer(blood_type_factor)
+str(blood_type_factor)
+blood_type_factor2<-factor(blood_type, ordered=TRUE, levels=c("A", "B", "AB", "O"))
+str(blood_type_factor)
+blood_type_factor
+str(blood_type_factor2)
+blood_type_factor2
+```
+##
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:
+What does patient[c(1,3)] give us? Is it a list or elements?
+What does patient[[c(1,3)] give us? Is it a list or elements?
+How about patient[[c(3,1)]? What is the difference? ( Hint: patient[[c(1,3)] is same as  patient[[1]][[3]]). 
+```{r eval=TRUE, comment="Console says:"}
+#What does patient[c(1,3)] give us? Is it a list or elements?
+blood_test <- list(Fluid="Blood sugar", Category="High", Value=140, Units="mg/dL")
+patient <- list(Name="Mike", Age=36, Btest=blood_test)
+patient[c(1,3)]
+#gives elements of the B_test (3rd element)
+
+#What does patient[[c(1,3)] give us? Is it a list or elements?
+patient[[c(1,3)]]
+#says subscript out of bounds
+#How about patient[[c(3,1)]? What is the difference? ( Hint: #patient[[c(1,3)] is same as  patient[[1]][[3]]). 
+#says subscript out of bounds. Supposed to say give the list element of the 3rd element (a list of patient
+patient[[c(3,1)]]
+
+```
+
+<span style="color:blue">**Classwork/Homework**</span>:
+Classwork/Homework: How do you remove an element from a list? 
+```{r eval=TRUE, comment="Console says:"}
+#Classwork/Homework: How do you remove an element from a list? 
+x <- list("a", "b", "c", "d", "e")
+x[length(x)] <- NULL
+x
+# list_name[index of list you want to remove]
+```
+##
+<span style="color:blue">**Classwork/Homework**</span>:
+1.Examine the structure of the data frame.
+2. What happens if one of the vectors have unequal length? 
+```{r eval=TRUE, comment="Console says:"}
+#Examine the structure of the data frame.
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df
+# What happens if one of the vectors have unequal length? 
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25,26)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df
+df <- data.frame(Name=name, Age=age, Cancer_Status=cancer, 
+                 stringsAsFactors = FALSE)
+#Error in data.frame(name, age, cancer) : arguments imply differing number of rows: 4, 5
+```
+
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:Test the operations of lists (like  ["age"] & [["age"]]) to data frames
+
+```{r eval=TRUE, comment="Console says:"}
+# Test the operations of lists (like  ["age"] & [["age"]]) to data frames. 
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df
+df[c(2,3),c("name", "cancer")]
+df <- data.frame(Name=name, Age=age, Cancer_Status=cancer, 
+                 stringsAsFactors = FALSE)
+#df[c(2,3),c("Name", "Nancer")]
+#df <- data.frame(Name=name, Age=age, #Cancer_Status=cancer, 
+#                 stringsAsFactors = FALSE)
+#won't work because names (top row) aren't stored as factors
+df <- data.frame(name, age, cancer)
+df[c(2,3),c(1,3)]
+df["age"] # give a list of age column
+df[["age"]] #give elements of age column
+```
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:
+1. Use cbind() to append a vector of choice.
+2. What happens if the length of the appending vector is greater than (or less than) row dimensions? 
+```{r eval=TRUE, comment="Console says:"}
+# Use cbind() to append a vector of choice.
+ 
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df$tumor_size <- c("T3", "T0", "T0", "T2")
+df
+gender <- c("F", "M", "M", "F")
+df<-cbind(df,gender)
+df
+#What happens if the length of the appending vector is greater than (or less than) row dimensions? 
+gender <- c("F", "M", "M", "F","M")
+df<-cbind(df,gender)
+df
+#Error in data.frame(..., check.names = FALSE) : 
+#  arguments imply differing number of rows: 4, 5
+```
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:
+1. Can you use the list() function instead of the data frame function in the above code?
+2. What happens if you leave the arguments name=, age= etc. in the above code? 
+```{r eval=TRUE, comment="Console says:"}
+# 1. Can you use the list() function instead of the data frame function in the above code?
+
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df$tumor_size <- c("T3", "T0", "T0", "T2")
+tom <- list(name="Tom", age=47, cancer="TRUE", tumor_size="T2")
+df <- rbind(df, tom)
+df
+list
+# 2. What happens if you leave the arguments name=, age= etc. in the above code?
+tom <- data.frame("Tom", 47, "TRUE", "T2")
+df <- rbind(df, tom)
+df
+#Error in match.names(clabs, names(xi)) : names do not match previous names
+```
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:
+1. What does sort(df$age) perform and how is it related to the ranks?
+2. Sort the entries in descending order of the age. (Hint: Question the function to find out more about the function in question). 
+```{r eval=TRUE, comment="Console says:"}
+# 1. What does sort(df$age) perform and how is it related to the ranks?
+
+name <- c("Anne", "James", "Mike", "Betty")
+age <- c(20, 43, 27, 25)
+cancer <- c(TRUE, FALSE, FALSE, TRUE)
+df <- data.frame(name, age, cancer)
+df$tumor_size <- c("T3", "T0", "T0", "T2")
+tom <- data.frame(name="Tom", age=47, cancer="TRUE", tumor_size="T2")
+df <- rbind(df, tom)
+df
+
+sort(df$age)
+#sorts the elements of age
+
+# 2. Sort the entries in descending order of the age. (Hint: Question the function to find out more about the function in question). 
+sort(df$age, decreasing = TRUE)
+```
+##
+
+
+<span style="color:blue">**Classwork/Homework**</span>:
+1. Is the above plot informative?
+2. What will you do to make it more informative? 
+
+```{r eval=TRUE, comment="Console says:"}
+# 1. Is the above plot informative?
+
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+URL <- paste(URL_text_1, URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+str(HANES)
+# Convert them to factors
+HANES$GENDER <- as.factor(HANES$GENDER)
+HANES$AGEGROUP <- as.factor(HANES$AGEGROUP)
+HANES$HSQ_1 <- as.factor(HANES$HSQ_1)
+plot(HANES$GENDER)
+#need labels and axis anmes. 
+#2. What will you do to make it more informative? 
+#add axis
+min(HANES$A1C, na.rm = T); max(HANES$A1C, na.rm = T)
+min(HANES$UACR, na.rm = T); max(HANES$UACR, na.rm = T)
+plot(log(HANES$A1C), log(HANES$UACR))
+
+# Rename the GENDER factor for identification 
+  HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+  HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+plot(HANES$AGEGROUP, HANES$GENDER)
+# Form a logical vector consisting only the MALE gender
+HANES_MALE <- HANES$GENDER == "M"
+  # Select only the records for the male population
+MALES_DF <- HANES[HANES_MALE,]
+hist(MALES_DF$A1C)
+
+```
+##
+<span style="color:blue">**Classwork/Homework**</span>:
+1.Find the distribution of A1C for the female population in the above data set. Are they different?
+2.Find the distribution of A1C for three age groups in the above data set. Is there a difference?
+3.Try to find the distribution of one more numeric variable (other than A1C) for the three age-groups.
+4.Try some plots with higher number of bins in the above exercise, what happanes? 
+
+```{r eval=TRUE, comment="Console says:"}
+library(RCurl)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+URL <- paste(URL_text_1, URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+str(HANES)
+# Convert them to factors
+HANES$GENDER <- as.factor(HANES$GENDER)
+HANES$AGEGROUP <- as.factor(HANES$AGEGROUP)
+HANES$HSQ_1 <- as.factor(HANES$HSQ_1)
+# Rename the GENDER factor for identification 
+HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Form a logical vector consisting only the MALE gender
+HANES_MALE <- HANES$GENDER == "M"
+HANES_FEMALE <- HANES$GENDER == "F"
+  # Select only the records for the each gender
+MALES_DF <- HANES[HANES_MALE,]
+FEMALES_DF <- HANES[HANES_FEMALE,]
+
+#1.Find the distribution of A1C for the female population in the above data set. Are they different?
+hist(MALES_DF$A1C)
+hist(FEMALES_DF$A1C)
+#a little, but not by too much
+#2.Find the distribution of A1C for three age groups in the above data set. Is there a difference?
+HANES_AGE_20to39 <- HANES$AGEGROUP == "20-39"
+HANES_AGE_40_59 <- HANES$AGEGROUP == "40-59"
+HANES_AGE_60plus <- HANES$AGEGROUP == "60+"
+
+HANES_AGE_20to39_DF <- HANES[HANES_AGE_20to39,]
+HANES_AGE_40_59_DF <- HANES[HANES_AGE_40_59,]
+HANES_AGE_60plus_DF <- HANES[HANES_AGE_60plus,]
+
+hist(HANES_AGE_20to39_DF$A1C)
+hist(HANES_AGE_40_59_DF$A1C)
+hist(HANES_AGE_60plus_DF$A1C)
+#yes, especially for age 60+
+#3.Try to find the distribution of one more numeric variable (other than A1C) for the three age-groups.
+
+hist(HANES_AGE_20to39_DF$LDLESTIMATE)
+hist(HANES_AGE_40_59_DF$LDLESTIMATE)
+hist(HANES_AGE_60plus_DF$LDLESTIMATE)
+
+
+#4.Try some plots with higher number of bins in the above exercise, what happanes? 
+hist(MALES_DF$A1C, breaks=10)
+```
+##
+<span style="color:blue">**Classwork/Homework**</span>:
+Change the type to “l” and report the plot type. 
+```{r eval=TRUE, comment="Console says:"}
+library(RCurl)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+URL <- paste(URL_text_1, URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+HANES$GENDER <- as.factor(HANES$GENDER)
+HANES$AGEGROUP <- as.factor(HANES$AGEGROUP)
+HANES$HSQ_1 <- as.factor(HANES$HSQ_1)
+# Rename the GENDER factor for identification 
+HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Form a logical vector consisting only the MALE gender
+HANES_MALE <- HANES$GENDER == "M"
+HANES_FEMALE <- HANES$GENDER == "F"
+  # Select only the records for the each gender
+MALES_DF <- HANES[HANES_MALE,]
+FEMALES_DF <- HANES[HANES_FEMALE,]
+
+#Change the type to “l” and report the plot type. 
+HANES_AGE_20to39 <- HANES$AGEGROUP == "20-39"
+HANES_AGE_40_59 <- HANES$AGEGROUP == "40-59"
+HANES_AGE_60plus <- HANES$AGEGROUP == "60+"
+
+HANES_AGE_20to39_DF <- HANES[HANES_AGE_20to39,]
+HANES_AGE_40_59_DF <- HANES[HANES_AGE_40_59,]
+HANES_AGE_60plus_DF <- HANES[HANES_AGE_60plus,]
+
+#points
+plot(HANES$GLUCOSE, HANES$GLUCOSESI, 
+       xlab= "Plasma Glucose", ylab = "Blood Glucose SI units", 
+       main = "Plasma vs Blood Glucose", type = "o", col="blue")
+#lines
+plot(HANES$GLUCOSE, HANES$GLUCOSESI, 
+       xlab= "Plasma Glucose", ylab = "Blood Glucose SI units", 
+       main = "Plasma vs Blood Glucose", type = "l", col="blue")
+
+```
+
+##
+<span style="color:blue">**Classwork/Homework**</span>:
+Do the above exercise with “mfcol” argument. How does it plot?  
+```{r eval=TRUE, comment="Console says:"}
+library(RCurl)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+URL <- paste(URL_text_1, URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+HANES$GENDER <- as.factor(HANES$GENDER)
+HANES$AGEGROUP <- as.factor(HANES$AGEGROUP)
+HANES$HSQ_1 <- as.factor(HANES$HSQ_1)
+# Rename the GENDER factor for identification 
+HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Form a logical vector consisting only the MALE gender
+HANES_MALE <- HANES$GENDER == "M"
+HANES_FEMALE <- HANES$GENDER == "F"
+  # Select only the records for the each gender
+MALES_DF <- HANES[HANES_MALE,]
+FEMALES_DF <- HANES[HANES_FEMALE,]
+
+#Change the type to “l” and report the plot type. 
+HANES_AGE_20to39 <- HANES$AGEGROUP == "20-39"
+HANES_AGE_40_59 <- HANES$AGEGROUP == "40-59"
+HANES_AGE_60plus <- HANES$AGEGROUP == "60+"
+
+HANES_AGE_20to39_DF <- HANES[HANES_AGE_20to39,]
+HANES_AGE_40_59_DF <- HANES[HANES_AGE_40_59,]
+HANES_AGE_60plus_DF <- HANES[HANES_AGE_60plus,]
+
+#####Do the above exercise with “mfcol” argument. How does it plot? 
+par(mfrow = c(2,2))
+# Plot LDL vs HDL
+plot(HANES$LDL, HANES$HDL)
+# Plot A1C vs HDL
+plot(HANES$A1C, HANES$HDL)
+# Plot GLUCOSE vs HDL
+plot(HANES$GLUCOSE, HANES$HDL)
+# Plot CHOLESTEROLTOTAL vs HDL
+plot(HANES$CHOLESTEROLTOTAL, HANES$HDL)
+
+par(mfcol = c(2,2))
+# Plot LDL vs HDL
+plot(HANES$LDL, HANES$HDL)
+# Plot A1C vs HDL
+plot(HANES$A1C, HANES$HDL)
+# Plot GLUCOSE vs HDL
+plot(HANES$GLUCOSE, HANES$HDL)
+# Plot CHOLESTEROLTOTAL vs HDL
+plot(HANES$CHOLESTEROLTOTAL, HANES$HDL)
+#switches rows("Z order"") and columns("anti N order"")
+```
+
+##
+<span style="color:blue">**Classwork/Homework**</span>:
+Make a plot and add elements through the functions points(), lines(), segments() and text().   
+```{r eval=TRUE, comment="Console says:"}
+library(RCurl)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+URL <- paste(URL_text_1, URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+HANES$GENDER <- as.factor(HANES$GENDER)
+HANES$AGEGROUP <- as.factor(HANES$AGEGROUP)
+HANES$HSQ_1 <- as.factor(HANES$HSQ_1)
+# Rename the GENDER factor for identification 
+HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Form a logical vector consisting only the MALE gender
+HANES_MALE <- HANES$GENDER == "M"
+HANES_FEMALE <- HANES$GENDER == "F"
+  # Select only the records for the each gender
+MALES_DF <- HANES[HANES_MALE,]
+FEMALES_DF <- HANES[HANES_FEMALE,]
+
+#Change the type to “l” and report the plot type. 
+HANES_AGE_20to39 <- HANES$AGEGROUP == "20-39"
+HANES_AGE_40_59 <- HANES$AGEGROUP == "40-59"
+HANES_AGE_60plus <- HANES$AGEGROUP == "60+"
+
+HANES_AGE_20to39_DF <- HANES[HANES_AGE_20to39,]
+HANES_AGE_40_59_DF <- HANES[HANES_AGE_40_59,]
+HANES_AGE_60plus_DF <- HANES[HANES_AGE_60plus,]
+
+#####Make a plot and add elements through the functions points(), lines(), segments() and text(). 
+
+# Create a grid on how our figures should appear
+grid <- matrix(c(1,1,2,3), nrow=2, ncol=2, byrow=TRUE)
+# Pass it to the layout function
+layout(grid)
+# Plot LDL vs HDL
+plot(HANES$LDL, HANES$HDL)
+# Plot GLUCOSE vs HDL
+plot(HANES$GLUCOSE, HANES$HDL)
+# Plot CHOLESTEROLTOTAL vs HDL
+plot(HANES$CHOLESTEROLTOTAL, HANES$HDL)
+# Reset the layout
+layout(1)
+
+plot(HANES$A1C, HANES$GLUCOSESI, xlim=c(6,8), ylim=c(3,10))
+lm_glucose_SI <- lm(HANES$A1C ~ HANES$GLUCOSESI)
+abline(coef(lm_glucose_SI), lwd = 2)
+points(8,3, col="blue", cex=1.5)
+text(7.9,4, "(8,3)", adj = c(0,0))
+```
+
+---
+
+#### Selected materials and references
+
+1. [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)
+2. [knitr package options](https://yihui.name/knitr/options/) and more
+
+---
