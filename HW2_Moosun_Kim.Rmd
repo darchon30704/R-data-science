@@ -1,0 +1,425 @@
+---
+title: "HW2"
+author: "Moosun Brad Kim"
+date: "7/24/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+### R fundamentals 03: Elements of programming, R Markdown  (`r format(Sys.Date(), "%b %d, %y")`)
+---
+
+
+---
+
+In this expression below, we can set the default chunk options for the rest of the document
+Please note that this chunk itself is defined as `include=FALSE`, means, please evaluate it but no output of any type please!
+
+library(dplyr)
+library(knitr)
+
+```{r setDefault, include=FALSE}
+# This code chunk defines the default chunks and libary settings
+knitr::opts_chunk$set(eval=FALSE, comment="$$$", fig.width=6)
+library(dplyr)
+library(knitr)
+library(rmarkdown)
+install.packages("tidyverse")
+library(tidyverse)
+```
+
+
+### Data science fundamentals 01: Visualize and explore 
+HW2
+
+<span style="color:blue">**Classwork/Homework**</span>: 
+
+**1. Run ggplot(data = HANES). What do you see?**
+<span style="color:red">
+an empty plot is given since R needs Geom functions or aethetics parameters
+</span>
+<br>
+**2. How many rows are in HANES? How many columns?**
+<span style="color:red">
+23x1527
+</span>
+<br>
+**3. What does the DX_DBTS variable describe?**
+<span style="color:red">
+Can map the colors of Diabetes Status to points. Here, diabetes Status is indicated on the legend.
+</span>
+<br>
+**4. Make a scatterplot of HDL vs A1C.**
+<span style="color:red">
+</span>
+<br>
+
+```{r eval=TRUE, comment="Console says:"}
+# Load the package RCurl
+library(RCurl)
+# Import the HANES data set from GitHub; break the string into two for readability
+# (Please note this readability aspect very carefully)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+# Paste it to constitute a single URL 
+URL <- paste(URL_text_1,URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+  # Rename the GENDER factor for identification
+  HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Rename the HSQ_1 factor for identification
+HANES$HSQ_1 <- factor(HANES$HSQ_1, labels=c("Excellent","Very Good","Good", "Fair", "Poor"))
+  # Rename the DX_DBTS as a factor
+HANES$DX_DBTS <- factor(HANES$DX_DBTS, labels=c("DIAB","DIAB NO_DX","NO DIAB"))
+  # Omit all NA from the data frame
+HANES <- na.omit(HANES)
+  # Observe the structure
+str(HANES)
+# Load the tidyverse library
+library(tidyverse)
+  # Make a ggplot
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR)))
+
+ggplot(data = HANES)
+str(HANES)
+
+  # Make a ggplot with asthetic color for the variable DX_DBTS
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=DX_DBTS))
+
+##**4. Make a scatterplot of HDL vs A1C.**
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = HDL, y = A1C, color="blue"))
+```
+
+##
+
+<br>
+
+Classwork/Homework:
+
+What’s gone wrong with this code? Why are the points not blue?
+```{r eval=FALSE}
+   # Make a ggplot with asthetic shape for the variable DX_DBTS
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), color="blue"))
+```
+Which variables in HANES are categorical? Which variables are continuous? How can we see this information?
+Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+<br>
+
+<span style="color:red">**Work**</span>: 
+```{r eval=TRUE, comment="Console says:"}
+# Load the package RCurl
+library(RCurl)
+# Import the HANES data set from GitHub; break the string into two for readability
+# (Please note this readability aspect very carefully)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+# Paste it to constitute a single URL 
+URL <- paste(URL_text_1,URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+  # Rename the GENDER factor for identification
+  HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Rename the HSQ_1 factor for identification
+HANES$HSQ_1 <- factor(HANES$HSQ_1, labels=c("Excellent","Very Good","Good", "Fair", "Poor"))
+  # Rename the DX_DBTS as a factor
+HANES$DX_DBTS <- factor(HANES$DX_DBTS, labels=c("DIAB","DIAB NO_DX","NO DIAB"))
+  # Omit all NA from the data frame
+HANES <- na.omit(HANES)
+  # Observe the structure
+str(HANES)
+# Load the tidyverse library
+library(tidyverse)
+  # Make a ggplot
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR)))
+
+ggplot(data = HANES)
+str(HANES)
+
+  # Make a ggplot with asthetic color for the variable DX_DBTS
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=DX_DBTS))
+
+## incorrect ggplot with color inside of aes(). (USE FOR Coloring Cat. Variables)
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color="blue"))
+## CORRECT ggplot with color OUTside of aes()
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR)), color="blue")
+
+### 4.Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+#color to continuous variable
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE))
+
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=HSQ_1))
+#
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=AGEGROUP))
+#
+##size to continuous variable
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=GLUCOSE))
+##shape to continuous variable with color gradient and regtangle shape
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=23, fill="blue")
+
+##shape to continuous variable with NO fill=color gradient and regtangle shape. Graident on borders only
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=23, fill="blue")
+
+##shape to continuous variable with color gradient and regtangle shape
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=15, fill="blue")
+
+#stroke aesthetic. Modify width of border
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=15, stroke=5)
+##map color aesthetic to a boolien function
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color = A1C < 5))
+#
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=AGEGROUP))
+
+
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), shape=HSQ_1))
+#
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), shape=AGEGROUP))
+
+```
+<br>
+
+<span style="color:blue">**Classwork/Homework Answers**</span>: 
+
+**1. What’s gone wrong with this code? Why are the points not blue?**
+<span style="color:red">
+aes() must be closed with no color inside. color= is part of mapping=
+</span>
+<br>
+**2.Which variables in HANES are categorical? Which variables are continuous?**
+<span style="color:red">
+str(HANES). Or, click on HANES in the environment tab (top-right), and a table representation will open.
+</span>
+<br>
+**3.How can we see this information?**
+<span style="color:red">
+click on HANES in the environment tab (top-right), and a table representation will open.
+</span>
+<br>
+**4.Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?**
+<span style="color:red">
+For color, different hues indicate different levels. Shapes does not work for some continuous variables however
+</span>
+**5. What happens if we map the same variable to multiple aesthetics?**
+<span style="color:red">
+Can adjust fill, shape, size of geometric points.
+</span>
+**6. What does the stroke aesthetic do? What shapes does it work with?**
+<span style="color:red">
+Use the stroke aesthetic to modify the width of the border
+</span>
+**7. What happens if we map an aesthetic to something other than a variable name, like aes(colour = A1C < 5)?**
+<span style="color:red">
+Maps color aesthetic to a boolien function. True or False in this case for A1C<5
+</span>
+
+<span style="color:red">**Work**</span>: 
+##
+
+<br>
+
+Classwork/Homework:
+
+What’s gone wrong with this code? Why are the points not blue?
+```{r eval=FALSE}
+   # Make a ggplot with asthetic shape for the variable DX_DBTS
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR), color="blue"))
+```
+Which variables in HANES are categorical? Which variables are continuous? How can we see this information?
+Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+<br>
+Lecture_05_Presentation Slide 43
+<span style="color:red">**Work for this HW**</span>: 
+```{r eval=TRUE, comment="Console says:"}
+# Load the package RCurl
+library(RCurl)
+# Import the HANES data set from GitHub; break the string into two for readability
+# (Please note this readability aspect very carefully)
+URL_text_1 <- "https://raw.githubusercontent.com/kannan-kasthuri/kannan-kasthuri.github.io"
+URL_text_2 <- "/master/Datasets/HANES/NYC_HANES_DIAB.csv"
+# Paste it to constitute a single URL 
+URL <- paste(URL_text_1,URL_text_2, sep="")
+HANES <- read.csv(text=getURL(URL))
+  # Rename the GENDER factor for identification
+  HANES$GENDER <- factor(HANES$GENDER, labels=c("M","F"))
+  # Rename the AGEGROUP factor for identification
+HANES$AGEGROUP <- factor(HANES$AGEGROUP, labels=c("20-39","40-59","60+"))
+  # Rename the HSQ_1 factor for identification
+HANES$HSQ_1 <- factor(HANES$HSQ_1, labels=c("Excellent","Very Good","Good", "Fair", "Poor"))
+  # Rename the DX_DBTS as a factor
+HANES$DX_DBTS <- factor(HANES$DX_DBTS, labels=c("DIAB","DIAB NO_DX","NO DIAB"))
+  # Omit all NA from the data frame
+HANES <- na.omit(HANES)
+  # Observe the structure
+str(HANES)
+# Load the tidyverse library
+library(tidyverse)
+  # Make a ggplot
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR)))
+
+ggplot(data = HANES)
+str(HANES)
+
+  # Make a ggplot with asthetic color for the variable DX_DBTS
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=DX_DBTS))
+
+## incorrect ggplot with color inside of aes(). (USE FOR Coloring Cat. Variables)
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color="blue"))
+## CORRECT ggplot with color OUTside of aes()
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR)), color="blue")
+
+### 4.Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
+#color to continuous variable
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE))
+
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=HSQ_1))
+#
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=AGEGROUP))
+#
+##size to continuous variable
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=GLUCOSE))
+##shape to continuous variable with color gradient and regtangle shape
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=23, fill="blue")
+
+##shape to continuous variable with NO fill=color gradient and regtangle shape. Graident on borders only
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=23, fill="blue")
+
+##shape to continuous variable with color gradient and regtangle shape
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=15, fill="blue")
+
+#stroke aesthetic. Modify width of border
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color=GLUCOSE), shape=15, stroke=5)
+##map color aesthetic to a boolien function
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR), color = A1C < 5))
+#
+
+# Make a ggplot with facet grid - AGEGROUP vs DX_DBTS
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR))) + 
+facet_grid(AGEGROUP ~ DX_DBTS)
+
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), size=AGEGROUP))
+
+
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), shape=HSQ_1))
+#
+#ggplot(data = HANES) + 
+#geom_point(mapping = aes(x = log(A1C), y = log(UACR), shape=AGEGROUP))
+
+
+```
+
+
+What happens if you facet on a continuous variable?
+What plots does the following code make? What does . do?
+<br>
+
+<span style="color:blue">**Classwork/Homework Answers**</span>: 
+
+**1. What happens if you facet on a continuous variable?**
+<span style="color:red">
+Chunk just stops. Cannot facet continuous variables
+</span>
+<br>
+```{r eval=FALSE,results='hold'}
+# Make a ggplot with facet grid - CREATININE~ TRIGLYCERIDE
+ggplot(data = HANES) + 
+geom_point(mapping = aes(x = log(A1C), y = log(UACR))) + 
+facet_grid(CREATININE~ TRIGLYCERIDE)
+```
+<br>
+**2.What plots does the following code make? What does . do?**
+
+```{r eval=FALSE}
+ ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(HDL), y = log(CHOLESTEROLTOTAL))) +
+  facet_grid(AGEGROUP ~ .)
+
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(UALBUMIN), y = log(GLUCOSE))) +
+  facet_grid(. ~ DX_DBTS)
+```
+<span style="color:red">
+facet_grid(. ~ categorical variable you want with labels on top row)
+facet_grid(categorical variable you want with labels on left column~ .)
+think as facet_grid(rows~columns). . can be thought of as an empty place holder for the grid.
+</span>
+<br>
+**3. Derive directed insights from the above plots.**
+<span style="color:red">
+
+</span>
+<br>
+**4. Take the first faceted plot in this section:**
+```{r eval=TRUE, include=FALSE, comment="Brad says:"}
+   # Make a ggplot with facets
+  ggplot(data = HANES) + 
+  geom_point(mapping = aes(x = log(A1C), y = log(UACR))) + 
+  facet_wrap(~ DX_DBTS, nrow = 2)
+```
+##
+What are the advantages to using faceting instead of the colour aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset?
+
+<span style="color:red">
+Sometimes, colors can obsure data points, making it hard to compare. facet_grid lets you visually compare depending on categorical variables. However, colors aesthetics are useful for visualizing levels of continuous variables. For larger datasets with few categorical variables, facet_grid may be an option to compare the combinations of the categories. Color aesthetics is useful if all the categories wish to be seen simultaneously on one graph. 
+</span>
+
+**5. Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? Why doesn’t facet_grid() have nrow and ncol argument?**
+<br>
+<span style="color:red">
+Number of rows and columns. facet_wrap() is generally a better use of screen space than facet_grid() because most displays are roughly rectangular. facet_grid() is most useful when you have two discrete variables, and all combinations of the variables exist in the data.
+</span>
+<br>
+##
+**6. When using facet_grid() you should usually put the variable with more unique levels in the columns. Why?**
+<br>
+<span style="color:red">
+Easier to horizontally read the names of the levels in the columns, and visualize the values continuous variable on rows(vertically)
+</span>
+<br>
+##
+---
+
+#### Selected materials and references
+
+1. [An Introduction to R](https://cran.r-project.org/doc/manuals/R-intro.pdf)
+2. [knitr package options](https://yihui.name/knitr/options/) and more
+
+---
